@@ -9,6 +9,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import ReglesDeCalcul from "./pages/ReglesDeCalcul";
 import Navbar from "./components/Navbar";
+import FormulaireRDV from "./pages/FormulaireRDV";
 import Chatbot from "./components/Chatbot"; // 🔥 Import du chatbot
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path="/simulators/infirmier" element={<InfirmierSimulator />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/regles-de-calcul" element={<ReglesDeCalcul />} />
+        <Route path="/formulaire-rdv" element={<FormulaireRDV />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
 
