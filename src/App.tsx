@@ -5,13 +5,11 @@ import Simulators from "./pages/Simulator/Simulators";
 import KineSimulator from "./pages/Simulator/KineSimulator";
 import SageFemmeSimulator from "./pages/Simulator/SageFemmeSimulator";
 import InfirmierSimulator from "./pages/Simulator/InfirmierSimulator";
-import KineExplanation from "./pages/Explanation/KineExplanation";
-import SageFemmeExplanation from "./pages/Explanation/SageFemmeExplanation";
-import InfirmierExplanation from "./pages/Explanation/InfirmierExplanation";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import ReglesDeCalcul from "./pages/ReglesDeCalcul";
 import Navbar from "./components/Navbar";
+import Chatbot from "./components/Chatbot"; // 🔥 Import du chatbot
 
 function App() {
   return (
@@ -19,23 +17,18 @@ function App() {
       <CssBaseline />
       <Navbar />
       <Routes>
-        {/* Redirection par défaut vers Home */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/regles-de-calcul" element={<ReglesDeCalcul />} />
-        <Route path="/home" element={<Navigate to="/" />} />
         <Route path="/simulators" element={<Simulators />} />
         <Route path="/simulators/kine" element={<KineSimulator />} />
         <Route path="/simulators/sage-femme" element={<SageFemmeSimulator />} />
         <Route path="/simulators/infirmier" element={<InfirmierSimulator />} />
-        <Route path="/explanation/kine" element={<KineExplanation />} />
-        <Route path="/explanation/sage-femme" element={<SageFemmeExplanation />} />
-        <Route path="/explanation/infirmier" element={<InfirmierExplanation />} />
-  
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/regles-de-calcul" element={<ReglesDeCalcul />} />
         <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
 
-     </Routes>
+      <Chatbot /> {/* 🔥 Ajout du Chatbot ici */}
     </Router>
   );
 }
