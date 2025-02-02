@@ -10,8 +10,10 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
+
 function Home() {
   const navigate = useNavigate();
+
 
   return (
     <>
@@ -58,6 +60,7 @@ function Home() {
         </Container>
       </Box>
 
+
       {/* Section de Présentation des Simulateurs */}
       <Container sx={{ py: 8 }}>
         <Grid container spacing={4}>
@@ -76,6 +79,7 @@ function Home() {
             </Paper>
           </Grid>
 
+
           <Grid item xs={12} md={4}>
             <Paper
               elevation={3}
@@ -90,6 +94,7 @@ function Home() {
               </Typography>
             </Paper>
           </Grid>
+
 
           <Grid item xs={12} md={4}>
             <Paper
@@ -107,6 +112,7 @@ function Home() {
           </Grid>
         </Grid>
 
+
         {/* 🆕 Ajout du bouton "Contact" en dessous des simulateurs */}
         <Box textAlign="center" sx={{ mt: 6 }}>
           <Button
@@ -119,6 +125,19 @@ function Home() {
           </Button>
         </Box>
       </Container>
+       
+        {/* Ajout du bouton "Prendre un rendez-vous" */}
+      <Box textAlign="center" sx={{ mt: 6 }}>
+        <Button
+          variant="contained"
+          color="secondary"
+          size="large"
+          onClick={() => navigate("/formulaire-rdv")}
+        >
+          Prendre un rendez-vous stratégique
+        </Button>
+      </Box>
+
 
       {/* Footer */}
       <Box sx={{ backgroundColor: "grey.200", py: 3, mt: 4 }}>
@@ -131,5 +150,6 @@ function Home() {
     </>
   );
 }
+
 
 export default Home;
