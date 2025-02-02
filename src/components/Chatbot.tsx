@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Box, Button, TextField, Typography, Paper } from "@mui/material";
 
-const API_KEY = "Vsk-proj-k8vHR6FljDREz2CMjfVrnTjjuUwwRmMS8P5cfgISWaPUPWuzpUI7KpO2SWarDt3CoPOSxzt5wCT3BlbkFJWynn42puAuej-OQMzBrciuQXcIQXxhsd1Qg9F9bFyYANQh-C4k2BpRBdApGt7Y4nwMmzggWYcA"; // 🔥 Remplace ici avec ta clé API
+const API_KEY = "en attente "; // 🔥 Remplace ici avec ta clé API
 
 function Chatbot() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
