@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "homepage": "https://romain-sidambarompoulle.github.io/vitejs-vite-4mjazctl",
   "scripts": {
-    "dev": "vite --base /",
+    "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
