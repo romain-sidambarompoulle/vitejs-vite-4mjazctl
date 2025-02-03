@@ -3,7 +3,7 @@ import { Container, Paper, Typography, TextField, Button, MenuItem, Box, Alert }
 import axios from "axios";
 
 
-const FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbwQSyUSs6oYCRXXHZ5NYsL_SbrU-QBlQqYg4JPiOcoeurMdr8X3QYC77bhC7exjnybuvA/exec"; // 🔥 Remplace par ton script Google Apps
+const FORM_ENDPOINT = "https://backend-render-jzvo.onrender.com/submit-form"; // 🔥 URL de l'API backend sur Render
 
 
 function FormulaireRDV() {

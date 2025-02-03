@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Box, Button, TextField, Typography, Paper } from "@mui/material";
 
-const API_KEY = "en attente "; // 🔥 Remplace ici avec ta clé API
+const BACKEND_URL = "https://backend-render-jzvo.onrender.com/chatbot"; // 🔥 URL de ton backend
 
 function Chatbot() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
@@ -19,23 +19,13 @@ function Chatbot() {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        "https://api.openai.com/v1/chat/completions",
-        {
-          model: "gpt-3.5-turbo",
-          messages: newMessages,
-        },
-        {
-          headers: {
-            "Authorization": `Bearer ${API_KEY}`,
-            "Content-Type": "application/json"
-          }
-        }
-      );
+      // 🔥 Envoi de la requête au backend (Render)
+      const response = await axios.post(BACKEND_URL, { message: input });
 
-      setMessages([...newMessages, { role: "assistant", content: response.data.choices[0].message.content }]);
+      // 🔥 Ajout de la réponse d'OpenAI
+      setMessages([...newMessages, { role: "assistant", content: response.data.response }]);
     } catch (error) {
-      console.error("Erreur API OpenAI :", error);
+      console.error("Erreur :", error);
     } finally {
       setLoading(false);
     }
@@ -53,12 +43,12 @@ function Chatbot() {
       {/* Fenêtre du chatbot */}
       {isOpen && (
         <Paper elevation={3} sx={{ p: 2, width: 300, position: "relative" }}>
-          <Typography variant="h6">Support Chat</Typography>
+          <Typography variant="h6">Support ODIA</Typography>
 
           <Box sx={{ maxHeight: 200, overflowY: "auto", mb: 2 }}>
             {messages.map((msg, index) => (
               <Typography key={index} sx={{ textAlign: msg.role === "user" ? "right" : "left" }}>
-                <strong>{msg.role === "user" ? "Vous" : "Bot"}:</strong> {msg.content}
+                <strong>{msg.role === "user" ? "Vous" : "Esther"}:</strong> {msg.content}
               </Typography>
             ))}
           </Box>
