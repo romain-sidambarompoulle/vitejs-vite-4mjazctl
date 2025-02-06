@@ -11,3 +11,11 @@
     <div id="root"></div>
   </body>
 </html>
+<script>
+  // Rediriger vers la route stockée dans sessionStorage
+  if (sessionStorage.redirect) {
+      const redirect = sessionStorage.redirect;
+      delete sessionStorage.redirect;
+      window.location.href = redirect;
+  }
+</script>
