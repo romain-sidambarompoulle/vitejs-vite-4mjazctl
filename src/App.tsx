@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { CssBaseline } from "@mui/material";
 import Home from "./pages/Home";
 import KineSimulator from "./pages/Simulator/KineSimulator";
