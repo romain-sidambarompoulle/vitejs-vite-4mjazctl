@@ -198,38 +198,67 @@ function Home() {
   </Button>
 </Box>
 
-          {/* 5 Cartes alignées côte à côte avec images et tailles différentes */}
-          <Grid 
-  container 
-  spacing={2} 
-  sx={{ mt: 3, justifyContent: "center", alignItems: "center" }} // Ajout de alignItems: "center"
+ {/* 5 Cartes avec défilement horizontal */}
+<Box 
+  sx={{ 
+    mt: 3,
+    width: '100%',
+    overflowX: 'auto', // Active le défilement horizontal
+    whiteSpace: 'nowrap', // Empêche le retour à la ligne
+    '-webkit-overflow-scrolling': 'touch', // Défilement fluide sur iOS
+    py: 2, // Ajoute un peu d'espace vertical
+    '&::-webkit-scrollbar': { // Style de la scrollbar
+      height: '6px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#A4C3B2',
+      borderRadius: '3px',
+    }
+  }}
 >
-  {images.map((image, index) => (
-    <Grid item key={index} sx={{ display: "flex", justifyContent: "center" }}>
+  <Box
+    sx={{
+      display: 'inline-flex', // Affiche les cartes en ligne
+      gap: 4, // Espace entre les cartes
+      px: 2, // Padding horizontal
+      width: 'max-content' // Force le conteneur à s'étendre selon le contenu
+    }}
+  >
+    {images.map((image, index) => (
       <Card
+        key={index}
         sx={{
           height: cardSizes[index].height,
           width: cardSizes[index].width,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          flexShrink: 0, // Empêche le rétrécissement des cartes
           backgroundImage: `url(${image})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
           borderRadius: "15px",
           boxShadow: 3,
+          display: 'inline-block', // Important pour le défilement
+          '&:hover': {
+            transform: 'scale(1.05)', // Effet de zoom au survol
+            transition: 'transform 0.3s ease'
+          }
         }}
       >
         <CardContent>
-          <Typography variant="body1" sx={{ color: "white", fontWeight: "bold", textAlign: "center" }}>
-            
+          <Typography 
+            variant="body1" 
+            sx={{ 
+              color: "white", 
+              fontWeight: "bold", 
+              textAlign: "center" 
+            }}
+          >
+            {/* Texte optionnel si besoin */}
           </Typography>
         </CardContent>
       </Card>
-    </Grid>
-  ))}
-</Grid>
+    ))}
+  </Box>
+</Box>
 
 
 </Paper>
