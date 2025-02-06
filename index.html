@@ -9,13 +9,13 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Rediriger vers la route stockée dans sessionStorage
+      if (sessionStorage.redirect) {
+          const redirect = sessionStorage.redirect;
+          delete sessionStorage.redirect;
+          window.location.href = redirect;
+      }
+    </script>
   </body>
 </html>
-<script>
-  // Rediriger vers la route stockée dans sessionStorage
-  if (sessionStorage.redirect) {
-      const redirect = sessionStorage.redirect;
-      delete sessionStorage.redirect;
-      window.location.href = redirect;
-  }
-</script>
