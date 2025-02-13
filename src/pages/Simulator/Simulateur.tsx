@@ -111,7 +111,7 @@ function Simulateur() {
     // CA minimum
     if (caValue < 52000) {
       setError(
-        "Votre chiffre d'affaires est inférieur à 52 000 €. Veuillez consulter les règles de calcul."
+        "Votre chiffre d'affaires est inférieur à 52 000 €. Veuillez demandez un RDV stratégique."
       );
       return;
     }
@@ -246,7 +246,6 @@ function Simulateur() {
         {selectedSim && (
           <Box sx={{ mt: 6, width: "100%", textAlign: "center" }}>
             <Paper elevation={3} sx={{ p: 4, maxWidth: "600px", margin: "auto" }}>
-              {/* Label modifié ici */}
               {error && <Alert severity="warning">{error}</Alert>}
 
               <form onSubmit={handleSubmit}>
@@ -260,9 +259,25 @@ function Simulateur() {
                   placeholder="Entrez votre CA annuel"
                   sx={{ mb: 3 }}
                 />
-                <Button variant="contained" color="primary" type="submit" disabled={loading}>
-                  {loading ? <CircularProgress size={24} /> : "Calculer"}
-                </Button>
+                <Box sx={{ display: "inline-flex", gap: 2 }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    disabled={loading}
+                  >
+                    {loading ? <CircularProgress size={24} /> : "Calculer"}
+                  </Button>
+                  {/* Bouton qui redirige vers la page des règles de calcul */}
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    type="button"
+                    onClick={() => navigate("/regles-de-calcul")}
+                  >
+                    Règles de calcul
+                  </Button>
+                </Box>
               </form>
             </Paper>
           </Box>
