@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { 
-  AppBar, 
-  Toolbar, 
-  Typography, 
-  Button, 
-  Box, 
-  Slide, 
-  useScrollTrigger, 
-  IconButton, 
-  Menu, 
-  MenuItem, 
-  useMediaQuery, 
-  useTheme 
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  Slide,
+  useScrollTrigger,
+  IconButton,
+  Menu,
+  MenuItem,
+  useMediaQuery,
+  useTheme
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -46,9 +46,9 @@ function Navbar() {
         <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           {/* Logo et nom */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Typography 
-              variant="h6" 
-              sx={{ fontWeight: "bold", color: "black", cursor: "pointer" }} 
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: "bold", color: "black", cursor: "pointer" }}
               onClick={() => navigate("/")}
             >
               ODIA-Stratégie
@@ -61,9 +61,7 @@ function Navbar() {
               <Button color="inherit" sx={{ color: "black" }} component={Link} to="/simulateur">
                 Simulateur
               </Button>
-              <Button color="inherit" sx={{ color: "black" }} component={Link} to="/a-propos">
-                À propos
-              </Button>
+              {/* Bouton "À propos" supprimé */}
               <Button color="inherit" sx={{ color: "black" }} component={Link} to="/contact">
                 Contact
               </Button>
@@ -85,16 +83,29 @@ function Navbar() {
                 onClose={handleMenuClose}
                 sx={{ mt: 1 }}
               >
-                <MenuItem onClick={() => { navigate("/simulateur"); handleMenuClose(); }}>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/simulateur");
+                    handleMenuClose();
+                  }}
+                >
                   Simulateur
                 </MenuItem>
-                <MenuItem onClick={() => { navigate("/a-propos"); handleMenuClose(); }}>
-                  À propos
-                </MenuItem>
-                <MenuItem onClick={() => { navigate("/contact"); handleMenuClose(); }}>
+                {/* MenuItem "À propos" supprimé */}
+                <MenuItem
+                  onClick={() => {
+                    navigate("/contact");
+                    handleMenuClose();
+                  }}
+                >
                   Contact
                 </MenuItem>
-                <MenuItem onClick={() => { navigate("/formulaire-rdv"); handleMenuClose(); }}>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/formulaire-rdv");
+                    handleMenuClose();
+                  }}
+                >
                   RDV Stratégique
                 </MenuItem>
               </Menu>

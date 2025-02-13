@@ -7,11 +7,8 @@ import {
   Grid,
   Card,
   CardContent,
-  Fab,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
-import AddIcon from "@mui/icons-material/Add";
 import SendIcon from "@mui/icons-material/Send";
 
 // 🔹 Tableau des images pour les cartes
@@ -35,14 +32,14 @@ const cardSizes = [
 function Home() {
   const navigate = useNavigate();
 
-  // Gère la redirection vers le simulateur en conservant la sélection
+  // Gère la redirection vers le simulateur
   const handleNavigateToSimulator = (simulator: string) => {
     navigate(`/simulateur?selected=${simulator}`);
   };
 
   return (
     <>
-      {/* Sections organisées avec Paper et Grid */}
+      {/* Contenant principal (Box) */}
       <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
         {/* Paper 1 */}
         <Paper
@@ -59,7 +56,7 @@ function Home() {
             textAlign: "center",
           }}
         >
-          {/* Slogan sous la navbar */}
+          {/* Slogan */}
           <Box sx={{ mb: 3, textAlign: "center" }}>
             <Typography
               variant="h2"
@@ -69,7 +66,7 @@ function Home() {
                 fontFamily: "'Rosborough CF', sans-serif",
                 letterSpacing: "2px",
                 mb: 4,
-                fontSize: { xs: "2rem", sm: "3rem", md: "4rem" }, // Responsive font size
+                fontSize: { xs: "2rem", sm: "3rem", md: "4rem" },
               }}
             >
               Travaillez mieux. Gagnez plus.{" "}
@@ -82,10 +79,10 @@ function Home() {
                 fontFamily: "'Montserrat', sans-serif",
                 fontWeight: 500,
                 mt: 4,
-                fontSize: { xs: "1.2rem", sm: "1.5rem", md: "2rem" }, // Responsive font size
+                fontSize: { xs: "1.2rem", sm: "1.5rem", md: "2rem" },
               }}
             >
-              Votre partenaire administratif d'optimisation de revenus <br />
+              Votre partenaire administratif d'optimisation de revenus<br />
               qui vous accompagne sur la durée.
             </Typography>
           </Box>
@@ -94,19 +91,19 @@ function Home() {
           <Box
             sx={{
               display: "flex",
-              flexDirection: { xs: "column", sm: "row" }, // Colonne sur mobile, ligne sur desktop
+              flexDirection: { xs: "column", sm: "row" },
               justifyContent: "center",
               gap: 2,
               width: "100%",
             }}
           >
-            {["Kinésithérapeute", "Sage-Femme", "Infirmier"].map((title, index) => (
+            {["Kinésithérapeute", "Sage-Femme", "Infirmier"].map((title, i) => (
               <Card
-                key={index}
+                key={i}
                 sx={{
                   backgroundColor: "#FCE5B6",
                   color: "black",
-                  minWidth: { xs: "100%", sm: "180px" }, // Pleine largeur sur mobile
+                  minWidth: { xs: "100%", sm: "180px" },
                   padding: "15px",
                   cursor: "pointer",
                   textAlign: "center",
@@ -150,7 +147,7 @@ function Home() {
             </Button>
           </Box>
 
-          {/* 5 Cartes avec défilement horizontal */}
+          {/* 5 Cartes défilantes */}
           <Box
             sx={{
               mt: 3,
@@ -167,14 +164,7 @@ function Home() {
               },
             }}
           >
-            <Box
-              sx={{
-                display: "inline-flex",
-                gap: 4,
-                px: 2,
-                width: "max-content",
-              }}
-            >
+            <Box sx={{ display: "inline-flex", gap: 4, px: 2, width: "max-content" }}>
               {images.map((image, index) => (
                 <Card
                   key={index}
@@ -202,168 +192,17 @@ function Home() {
                         fontWeight: "bold",
                         textAlign: "center",
                       }}
-                    ></Typography>
+                    >
+                      {/* Texte si besoin */}
+                    </Typography>
                   </CardContent>
                 </Card>
               ))}
             </Box>
           </Box>
         </Paper>
-
-        {/* Paper 2 */}
-        <Paper
-          elevation={3}
-          sx={{
-            minHeight: { xs: "auto", sm: "500px", md: "600px" },
-            maxWidth: { xs: "90%", sm: "80%", md: "70%" },
-            width: "100%",
-            margin: "auto",
-            backgroundColor: "#A4C3B2",
-            p: { xs: 2, md: 8 },
-            mt: 4,
-          }}
-        >
-          <Typography
-            variant="h4"
-            fontWeight="bold"
-            color="white"
-            textAlign="center"
-            sx={{ mb: 5, fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" } }}
-          >
-            Vous êtes kinésithérapeute, infirmier(ère) ou sage-femme et vous souhaitez mieux valoriser votre travail ?
-          </Typography>
-
-          <Grid container spacing={6} alignItems="center">
-            <Grid item xs={12} md={4}>
-              <Card
-                sx={{
-                  backgroundColor: "#F7D488",
-                  p: 3,
-                  color: "black",
-                  textAlign: "center",
-                  width: "100%",
-                  minHeight: "180px",
-                  borderTopLeftRadius: "30px",
-                  borderBottomRightRadius: "30px",
-                }}
-              >
-                <CardContent>
-                  <Typography variant="body1">
-                    ODIA assume l’intégralité de votre gestion administrative, revoit et améliore votre structure financière...
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            <Grid item xs={12} md={8}>
-              <Card sx={{ p: 4, width: "100%", minHeight: "200px" }}>
-                <CardContent>
-                  <Typography variant="h6" textAlign="center">
-                    Accès à nos simulateurs
-                  </Typography>
-                  <Box textAlign="center" sx={{ mt: 3 }}>
-                    <Button variant="contained" startIcon={<PlayCircleOutlineIcon />}>
-                      Voir la vidéo explicative
-                    </Button>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        </Paper>
-
-        {/* Paper 3 */}
-        <Paper
-          elevation={3}
-          sx={{
-            minHeight: { xs: "auto", sm: "500px", md: "600px" },
-            maxWidth: { xs: "90%", sm: "80%", md: "70%" },
-            width: "100%",
-            margin: "auto",
-            backgroundColor: "white",
-            p: { xs: 2, md: 8 },
-            mt: 4,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={4}>
-              <Card sx={{ p: 2, backgroundColor: "#A4C3B2", color: "white" }}>
-                <CardContent>
-                  <Typography variant="body1">
-                    Un nouveau regard sur le libéral...
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-
-          <Box textAlign="center" sx={{ my: 3 }}>
-            <Button variant="contained" size="large" onClick={() => navigate("/formulaire-rdv")}>
-              RDV Stratégique
-            </Button>
-          </Box>
-
-          <Grid container justifyContent="flex-end">
-            <Grid item xs={12} md={4}>
-              <Card sx={{ p: 2, backgroundColor: "#EFE9AE" }}>
-                <CardContent>
-                  <Typography variant="body1">
-                    Tout commence par un RDV stratégique offert...
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        </Paper>
-
-        {/* Paper 4 */}
-        <Paper
-          elevation={3}
-          sx={{
-            minHeight: { xs: "auto", sm: "500px", md: "600px" },
-            maxWidth: { xs: "90%", sm: "80%", md: "70%" },
-            width: "100%",
-            margin: "auto",
-            backgroundColor: "#A4C3B2",
-            p: { xs: 2, md: 8 },
-            mt: 4,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
-          <Card sx={{ textAlign: "center", p: 4, minHeight: "180px" }}>
-            <CardContent>
-              <Typography variant="h5" fontWeight="bold" color="yellow.200" sx={{ mb: 2 }}>
-                Nous couvrons l’ensemble du parcours
-              </Typography>
-              <Typography variant="body1" color="yellow.200">
-                Constitution du dossier, suivi juridique, comptabilité, conseil en investissement.
-                Vous n’êtes plus seul à devoir comprendre et appliquer de multiples informations éparses.
-              </Typography>
-            </CardContent>
-          </Card>
-
-          <Grid container spacing={3} sx={{ mt: 6 }}>
-            {[
-              "Plus de temps : vous réduisez votre gestion administrative au strict minimum.",
-              "Plus de revenu : vous conservez davantage de ce que vous produisez.",
-              "Plus de sérénité : vous savez exactement où vous allez et comment.",
-            ].map((text, index) => (
-              <Grid item xs={12} md={4} key={index}>
-                <Card sx={{ backgroundColor: "#EFE9AE", p: 3, textAlign: "center", height: "100%" }}>
-                  <CardContent>
-                    <Typography variant="body1">{text}</Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Paper>
       </Box>
+      {/* /Fin du grand Box (section principale) */}
 
       {/* Footer */}
       <Box sx={{ backgroundColor: "grey.200", py: 3 }}>

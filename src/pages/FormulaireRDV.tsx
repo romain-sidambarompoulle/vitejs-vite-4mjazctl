@@ -14,7 +14,7 @@ function FormulaireRDV() {
     telephone: "",
     statut: "",
     revenu: "",
-    situation_familiale: "",
+    
   });
 
 
@@ -39,7 +39,7 @@ function FormulaireRDV() {
       const response = await axios.post(FORM_ENDPOINT, formData);
       if (response.status === 200) {
         setSuccess(true);
-        setFormData({ nom: "", prenom: "", email: "", telephone: "", statut: "", revenu: "", situation_familiale: "" });
+        setFormData({ nom: "", prenom: "", email: "", telephone: "", statut: "", revenu: "" });
       }
     } catch (err) {
       setError("Une erreur est survenue. Veuillez réessayer.");
@@ -84,13 +84,6 @@ function FormulaireRDV() {
             <MenuItem value="150k+">150 000 € et plus</MenuItem>
           </TextField>
 
-
-          <TextField select fullWidth label="Situation Familiale" name="situation_familiale" value={formData.situation_familiale} onChange={handleChange} required sx={{ mb: 3 }}>
-            <MenuItem value="Célibataire">Célibataire</MenuItem>
-            <MenuItem value="Marié(e)">Marié(e)</MenuItem>
-            <MenuItem value="Divorcé(e)">Divorcé(e)</MenuItem>
-            <MenuItem value="Pacsé(e)">Pacsé(e)</MenuItem>
-          </TextField>
 
 
           <Button fullWidth variant="contained" color="primary" type="submit" disabled={loading}>

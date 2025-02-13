@@ -11,9 +11,9 @@ import Contact from "./pages/Contact";
 import ReglesDeCalcul from "./pages/ReglesDeCalcul";
 import Navbar from "./components/Navbar";
 import FormulaireRDV from "./pages/FormulaireRDV";
-import APropos from "./pages/Apropos";
-import Simulateur from "./pages/Simulator/Simulateur"
-import Chatbot from "./components/Chatbot"; // 🔥 Import du chatbot
+// import APropos from "./pages/Apropos"; // Import gardé commenté s’il sert plus tard
+import Simulateur from "./pages/Simulator/Simulateur";
+// import Chatbot from "./components/Chatbot"; // Chatbot temporairement désactivé
 
 function App() {
   return (
@@ -29,7 +29,7 @@ function App() {
         <Route path="/explanation/sage-femme" element={<SagefemmeExplanation />} />
         <Route path="/explanation/kine" element={<KineExplanation />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/a-propos" element={<APropos />} />
+        {/* <Route path="/a-propos" element={<APropos />} /> */}
         <Route path="/simulateur" element={<Simulateur />} />
         <Route path="/regles-de-calcul" element={<ReglesDeCalcul />} />
         <Route path="/simulateur/:type" element={<Simulateur />} />
@@ -37,7 +37,7 @@ function App() {
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
 
-      <Chatbot /> {/* 🔥 Ajout du Chatbot ici */}
+      {/* <Chatbot />  <-- Composant Chatbot désactivé */}
     </Router>
   );
 }
