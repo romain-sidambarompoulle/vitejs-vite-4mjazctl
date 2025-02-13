@@ -168,36 +168,35 @@ function Simulateur() {
   // ------------------------- Préparation des données Recharts -------------------------
   // On ne calcule les données que si data est défini
   const chartDataCharges = data
-  ? [
-      {
-        name: "URSSAF",
-        BNC: data.simulation_bnc?.cotisations || 0,
-        ODIA: data.simulation_odia?.cotisations || 0
-      },
-      {
-        name: "CARPIMKO ou CARCDSF",
-        BNC: data.simulation_bnc?.contribution || 0,
-        ODIA: data.simulation_odia?.contribution || 0
-      },
-      {
-        name: "Impôt IR",
-        BNC: data.simulation_bnc?.impot_sur_le_revenu || 0,
-        ODIA: data.simulation_odia?.impot_sur_le_revenu || 0
-      }
-    ]
-  : [];
+    ? [
+        {
+          name: "URSSAF",
+          BNC: data.simulation_bnc?.cotisations || 0,
+          ODIA: data.simulation_odia?.cotisations || 0
+        },
+        {
+          name: "CARPIMKO ou CARCDSF",
+          BNC: data.simulation_bnc?.contribution || 0,
+          ODIA: data.simulation_odia?.contribution || 0
+        },
+        {
+          name: "Impôt IR",
+          BNC: data.simulation_bnc?.impot_sur_le_revenu || 0,
+          ODIA: data.simulation_odia?.impot_sur_le_revenu || 0
+        }
+      ]
+    : [];
 
-  // Pour la différence d'épargne disponible (on suppose que "net" = épargne ou un champ semblable)
+  // Pour la différence d'épargne disponible
   const chartDataEpargne = data
-  ? [
-      {
-        name: "Épargne Disponible",
-        BNC: data.simulation_bnc?.epargne_disponible || 0,
-        ODIA: data.simulation_odia?.total_epargne_disponible|| 0
-      }
-    ]
-  : [];
-
+    ? [
+        {
+          name: "Épargne Disponible",
+          BNC: data.simulation_bnc?.epargne_disponible || 0,
+          ODIA: data.simulation_odia?.total_epargne_disponible || 0
+        }
+      ]
+    : [];
 
   return (
     <Container maxWidth="md" sx={{ py: 6 }}>
@@ -219,7 +218,9 @@ function Simulateur() {
               <Card
                 sx={{
                   backgroundColor:
-                    selectedSim === sim ? "#A4C3B2" : selectedSim ? "#E0E0E0" : "#EFE9AE",
+                    selectedSim === sim ? "#A4C3B2" : selectedSim
+                    ? "#E0E0E0"
+                    : "#EFE9AE",
                   p: 3,
                   textAlign: "center",
                   height: "100%",
@@ -241,25 +242,22 @@ function Simulateur() {
           ))}
         </Grid>
 
-                {/* Formulaire de saisie du CA */}
-                {selectedSim && (
+        {/* Formulaire de saisie du CA */}
+        {selectedSim && (
           <Box sx={{ mt: 6, width: "100%", textAlign: "center" }}>
             <Paper elevation={3} sx={{ p: 4, maxWidth: "600px", margin: "auto" }}>
-              <Typography variant="h5" sx={{ mb: 3 }}>
-                
-              </Typography>
-
+              {/* Label modifié ici */}
               {error && <Alert severity="warning">{error}</Alert>}
 
               <form onSubmit={handleSubmit}>
                 <TextField
                   fullWidth
-                  label="Chiffre d’Affaires (€)"
+                  label="Chiffre d’Affaires Annuel (€)"
                   variant="outlined"
                   type="number"
                   value={chiffreAffaires}
                   onChange={(e) => setChiffreAffaires(e.target.value)}
-                  placeholder="Entrez votre CA"
+                  placeholder="Entrez votre CA annuel"
                   sx={{ mb: 3 }}
                 />
                 <Button variant="contained" color="primary" type="submit" disabled={loading}>
@@ -267,7 +265,7 @@ function Simulateur() {
                 </Button>
               </form>
             </Paper>
-         </Box>
+          </Box>
         )}
 
         {/* Résultats BNC et ODIA */}
@@ -278,13 +276,13 @@ function Simulateur() {
                 <Paper elevation={1} sx={{ p: 2 }}>
                   <Chip label="BNC / EI / IR" color="primary" sx={{ mb: 2 }} />
                   <List>
-                  {Object.keys(data.simulation_bnc)
+                    {Object.keys(data.simulation_bnc)
                       .filter((key) => bncLabels[key])
                       .map((key) => (
                         <ListItem key={key}>
                           {bncLabels[key]}: {formatNumber(data.simulation_bnc[key])}
                         </ListItem>
-                    ))}
+                      ))}
                   </List>
                 </Paper>
               </Grid>
@@ -292,20 +290,20 @@ function Simulateur() {
                 <Paper elevation={1} sx={{ p: 2 }}>
                   <Chip label="Stratégie ODIA" color="secondary" sx={{ mb: 2 }} />
                   <List>
-                  {Object.keys(data.simulation_odia)
+                    {Object.keys(data.simulation_odia)
                       .filter((key) => odiaLabels[key])
                       .map((key) => (
                         <ListItem key={key}>
                           {odiaLabels[key]}: {formatNumber(data.simulation_odia[key])}
                         </ListItem>
-                    ))}
+                      ))}
                   </List>
                 </Paper>
               </Grid>
             </Grid>
 
-             {/* Tableau supplémentaire pour les indicateurs financiers */}
-             {Object.keys(data.simulation_odia).some((key) => extraLabels[key]) && (
+            {/* Indicateurs financiers supplémentaires */}
+            {Object.keys(data.simulation_odia).some((key) => extraLabels[key]) && (
               <Paper elevation={1} sx={{ p: 2, mt: 4 }}>
                 <Chip label="Notre petit plus" color="secondary" sx={{ mb: 2 }} />
                 <List>
@@ -319,8 +317,8 @@ function Simulateur() {
                 </List>
               </Paper>
             )}
-            
-            {/* ---------- Graphique 1 : Charges (CSG/CRDS, cotisations, impôt) ---------- */}
+
+            {/* Graphique 1 : Charges (URSSAF, CARPIMKO, impôt) */}
             <Typography variant="h5" sx={{ mt: 6, mb: 2 }}>
               Comparaison des charges
             </Typography>
@@ -341,7 +339,7 @@ function Simulateur() {
               </ResponsiveContainer>
             </Box>
 
-            {/* ---------- Graphique 2 : Épargne disponible ---------- */}
+            {/* Graphique 2 : Épargne disponible */}
             <Typography variant="h5" sx={{ mt: 6, mb: 2 }}>
               Comparaison de l'épargne disponible
             </Typography>
@@ -361,7 +359,6 @@ function Simulateur() {
                 </BarChart>
               </ResponsiveContainer>
             </Box>
-          
           </>
         )}
       </Paper>
