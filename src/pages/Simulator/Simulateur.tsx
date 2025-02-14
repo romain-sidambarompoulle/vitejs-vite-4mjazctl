@@ -33,9 +33,9 @@ import {
 
 // URLs des APIs pour chaque simulateur
 const API_URLS: Record<string, string> = {
-  kine: "https://script.google.com/macros/s/AKfycbzNd0Blu_J5Ms-FGgfQQgal46qlfXlgHRiygR0RA2BGjHh_vm9ZHxt6raDrAubFynZVhQ/exec",
-  sagefemme: "https://script.google.com/macros/s/AKfycbwhyFANDybERSdTg2l5J3LtCodmUC7VxPkZopFw-D6HoFx4RGZiAR8r7dJJoHBZYA4RQw/exec",
-  infirmier: "https://script.google.com/macros/s/AKfycbwKH4QWfJNk7myoreqWpiW2bvGtHrjXz55qObeN0QBlOOJ6iRGMGkmlbPNawKpACy8V/exec"
+  kine: "https://script.google.com/macros/s/AKfycbwkUeQAC7vB2ls_KCD6OCVNrqCFpBNolR10RmDt-A7tzPblxWGHNsvXCun0hvahSzpwmA/exec",
+  sagefemme: "https://script.google.com/macros/s/AKfycbwMIwgn9-T_86M03CJ_BuAzk2rjatEJsUM5Sxjy-L_75wthI2gYE2kCpTPEwG4-Q_LA1w/exec",
+  infirmier: "https://script.google.com/macros/s/AKfycbxiDTDAM9d5FkAOP0GWY3bIwdR9qbCFPK-NJxn06NG-r3_l_y4uCepwWOUmBjeEuiCO/exec"
 };
 
 function Simulateur() {
