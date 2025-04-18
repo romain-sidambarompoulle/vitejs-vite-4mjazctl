@@ -1,8 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
+import axios from "../config/axios";
 import { Box, Button, TextField, Typography, Paper } from "@mui/material";
-
-const BACKEND_URL = "https://backend-render-jzvo.onrender.com/chatbot"; // 🔥 URL de ton backend
+import { API_ROUTES } from '../config/api';  // Ajout de l'import
 
 function Chatbot() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
@@ -13,16 +12,14 @@ function Chatbot() {
   const sendMessage = async () => {
     if (!input.trim()) return;
 
+    setLoading(true);
     const newMessages = [...messages, { role: "user", content: input }];
     setMessages(newMessages);
     setInput("");
-    setLoading(true);
 
     try {
-      // 🔥 Envoi de la requête au backend (Render)
-      const response = await axios.post(BACKEND_URL, { message: input });
-
-      // 🔥 Ajout de la réponse d'OpenAI
+      // Utiliser API_ROUTES pour la route du chatbot
+      const response = await axios.post(API_ROUTES.chatbot, { message: input });
       setMessages([...newMessages, { role: "assistant", content: response.data.response }]);
     } catch (error) {
       console.error("Erreur :", error);
