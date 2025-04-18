@@ -2,7 +2,7 @@ name: Deploy Vite site to GitHub Pages
 
 on:
   push:
-    branches: [ main ]            # déclenche à chaque push sur main
+    branches: [ main ]      # déclenche à chaque push sur main
 
 concurrency:
   group: "pages"
@@ -13,36 +13,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1) Récupère le dépôt
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Node + cache npm
+      # 2) Installe Node + met en cache le dossier npm
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: "npm"
 
+      # 3) Installe les dépendances
       - name: Install deps
         run: npm ci
-        working-directory: vitejs-vite-4mjazctl
 
-      # --- Ici deux options pour le build (choisis UNE seule) -------------------
-      # ► Option A : laisser Vite charger .env.production (suffit dans 99 % des cas)
-      - name: Build (loads .env.production)
+      # 4) Build en mode production (charge .env.production)
+      - name: Build site
         run: npm run build -- --mode production
-        working-directory: vitejs-vite-4mjazctl
 
-      # ► Option B : injecter/écraser la variable à la volée
-      # - name: Build (explicit env override)
-      #   env:
-      #     VITE_API_BASEURL: https://backend-render-jzvo.onrender.com
-      #   run: npm run build
-      #   working-directory: vitejs-vite-4mjazctl
-      # -------------------------------------------------------------------------
-
+      # 5) Déploie le dossier dist/ sur la branche gh‑pages
       - name: Deploy to gh‑pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: vitejs-vite-4mjazctl/dist
+          publish_dir: dist
