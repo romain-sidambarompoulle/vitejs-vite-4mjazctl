@@ -31,6 +31,9 @@ jobs:
       - name: Install deps
         run: npm ci
 
+      - name: Add rollup linux binary (CI only)
+        run: npm install --no-save @rollup/rollup-linux-x64-gnu   # ← nouveau
+
       # 4) Build en mode production (charge .env.production)
       - name: Build site
         env:
