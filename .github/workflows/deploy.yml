@@ -7,6 +7,9 @@ on:
 concurrency:
   group: "pages"
   cancel-in-progress: true
+  
+permissions:
+  contents: write
 
 jobs:
   build-and-deploy:
