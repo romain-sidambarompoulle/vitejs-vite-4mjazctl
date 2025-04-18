@@ -33,6 +33,8 @@ jobs:
 
       # 4) Build en mode production (charge .env.production)
       - name: Build site
+        env:
+          ROLLUP_DISABLE_NATIVE: 1   # ← force Rollup à utiliser l’implémentation JS/WASM
         run: npm run build -- --mode production
 
       # 5) Déploie le dossier dist/ sur la branche gh‑pages
