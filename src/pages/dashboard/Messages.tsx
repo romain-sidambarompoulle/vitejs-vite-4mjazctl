@@ -328,7 +328,7 @@ const Messages: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <TextField
             fullWidth
-            label="Écrire un message à l'administrateur..."
+            label="Écrire un message à votre conseiller ODIA..."
             multiline
             maxRows={4}
             value={newMessage}
@@ -361,7 +361,7 @@ const Messages: React.FC = () => {
         open={showNewMessageSnackbar}
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
-        message="Nouveau message de l'administrateur !"
+        message="Nouveau message de votre conseiller ODIA !"
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       />
 

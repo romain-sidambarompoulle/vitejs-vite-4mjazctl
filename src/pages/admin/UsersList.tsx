@@ -29,14 +29,8 @@ const UsersList = () => {
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
-  const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [editForm, setEditForm] = useState({
-    nom: '',
-    prenom: '',
-    email: ''
-  });
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
@@ -73,16 +67,6 @@ const UsersList = () => {
     fetchUsers();
   }, []);
 
-  useEffect(() => {
-    if (selectedUser) {
-      setEditForm({
-        nom: selectedUser.nom,
-        prenom: selectedUser.prenom,
-        email: selectedUser.email
-      });
-    }
-  }, [selectedUser]);
-
   const filteredUsers = users.filter(user =>
     user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -91,11 +75,6 @@ const UsersList = () => {
 
   const handleViewDetails = (userId: number) => {
     navigate(`/admin/users/${userId}`);
-  };
-
-  const handleEditUser = (user: User) => {
-    setSelectedUser(user);
-    setOpenEditModal(true);
   };
 
   const handleDeleteUser = (user: User) => {
@@ -121,38 +100,6 @@ const UsersList = () => {
     } finally {
       setLoading(false);
       setOpenDeleteModal(false);
-    }
-  };
-
-  const handleEditFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditForm({
-      ...editForm,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const submitEdit = async () => {
-    if (!selectedUser) return;
-    
-    try {
-      setLoading(true);
-      const response = await axios.put(`${API_ROUTES.admin.users}/${selectedUser.id}`, editForm);
-      if (response.data.success) {
-        setUsers(prev => prev.map(u => 
-          u.id === selectedUser.id 
-            ? { ...u, nom: editForm.nom, prenom: editForm.prenom, email: editForm.email }
-            : u
-        ));
-        setSnackbar({ open: true, message: 'Utilisateur modifié avec succès', severity: 'success' });
-      } else {
-        setSnackbar({ open: true, message: 'Erreur: ' + response.data.message, severity: 'error' });
-      }
-    } catch (error) {
-      const err = error as any;
-      setSnackbar({ open: true, message: 'Erreur: ' + (err.response?.data?.message || err.message), severity: 'error' });
-    } finally {
-      setLoading(false);
-      setOpenEditModal(false);
     }
   };
 
@@ -230,14 +177,6 @@ const UsersList = () => {
                       
                       <Button 
                         variant="contained" 
-                        onClick={() => handleEditUser(user)}
-                        sx={{ bgcolor: '#FFA000', '&:hover': { bgcolor: '#FF8F00' } }}
-                      >
-                        Modifier
-                      </Button>
-                      
-                      <Button 
-                        variant="contained" 
                         onClick={() => handleDeleteUser(user)}
                         sx={{ bgcolor: '#F44336', '&:hover': { bgcolor: '#D32F2F' } }}
                       >
@@ -297,42 +236,6 @@ const UsersList = () => {
         </TableContainer>
       )}
 
-      {/* Modal de modification */}
-      <Dialog open={openEditModal} onClose={() => setOpenEditModal(false)}>
-        <DialogTitle>Modifier l'utilisateur</DialogTitle>
-        <DialogContent>
-          <Stack spacing={2} sx={{ mt: 2 }}>
-            <TextField 
-              label="Nom"
-              name="nom"
-              value={editForm.nom}
-              onChange={handleEditFormChange}
-              fullWidth
-            />
-            <TextField 
-              label="Prénom"
-              name="prenom"
-              value={editForm.prenom}
-              onChange={handleEditFormChange}
-              fullWidth
-            />
-            <TextField 
-              label="Email"
-              name="email"
-              value={editForm.email}
-              onChange={handleEditFormChange}
-              fullWidth
-              disabled
-            />
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenEditModal(false)}>Annuler</Button>
-          <Button onClick={submitEdit} variant="contained" color="primary">Enregistrer</Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Modal de confirmation de suppression */}
       <Dialog open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}>
         <DialogTitle>Confirmer la suppression</DialogTitle>
         <DialogContent>
@@ -347,7 +250,6 @@ const UsersList = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Snackbar pour les notifications */}
       <Snackbar 
         open={snackbar.open} 
         autoHideDuration={6000} 

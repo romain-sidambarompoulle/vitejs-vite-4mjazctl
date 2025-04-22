@@ -6,6 +6,7 @@ import {
   Paper,
   Grid,
   useTheme,
+  useMediaQuery,
   CircularProgress,
   Alert,
   Tabs,
@@ -30,7 +31,7 @@ import {
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect, useContext } from 'react';
 import backgroundImage from '../assets/damefond.avif';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
@@ -57,6 +58,7 @@ import { useGlobalModal } from '../contexts/GlobalModalContext';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import { UserContext } from '../contexts/UserContext';
 
 // Ajout du type pour les simulateurs disponibles
 type SimulatorType = 'kine' | 'sagefemme' | 'infirmier';
@@ -105,12 +107,14 @@ const faqData = [
 function Home() {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
   const { width, height } = useWindowSize();
   const simulateurRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
   const rdvRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const { openModal, closeModal, anyModalOpen, setAnyModalOpen } = useGlobalModal();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   // États pour le simulateur
   const [selectedSim, setSelectedSim] = useState<SimulatorType>("kine");
@@ -281,46 +285,69 @@ function Home() {
   // Vérifier l'état de la session au chargement
   useEffect(() => {
     const userData = localStorage.getItem('user');
-    
-    if (userData) {
-      window.location.replace('/#/dashboard');
+    const token = localStorage.getItem('token');
+
+    if (userData && token) {
+      navigate('/dashboard', { replace: true });
     }
-  }, []);
+  }, [navigate]);
 
   // Modifié: Utiliser closeModal lors de la fermeture du modal des credentials
   const handleCloseCredentialsModal = () => {
-    closeModal();
+    closeModal(); // S'assurer que le contexte est notifié de la fermeture
     setOpenModalState(false);
   };
 
-  // Modifié: Utiliser openModal pour conditionner l'ouverture du modal des credentials
+  // Modifié: Simplifier l'ouverture du modal des credentials
   const handleOpenCredentialsModal = () => {
-     if (openModal()) {
-       setOpenModalState(true);
-     } else {
-       console.log("Ouverture du modal credentials bloquée car un autre modal est déjà ouvert.");
-     }
+     // On force la fermeture de tout modal potentiellement encore considéré comme ouvert par le contexte
+     closeModal(); 
+     // On ouvre ensuite la modale des credentials localement
+     setOpenModalState(true);
   };
 
-  // Modifié: Utiliser closeModal lors de l'action (redirection)
+  // Modifié: Mettre à jour le contexte utilisateur avant la redirection
   const handleModalAction = async () => {
     try {
+      // Étape 1: Stocker le token si disponible
       if (autoLoginToken) {
         localStorage.setItem('token', autoLoginToken);
-        localStorage.setItem('user', JSON.stringify({
-          email: userCredentials.email,
-          nom: "",
-          prenom: "",
-          role: "visitor"
-        }));
-        console.log('Token stocké dans localStorage avant redirection');
+        console.log('Token stocké dans localStorage avant récupération user');
+      } else {
+           console.warn("Pas de token d'auto-login disponible pour stocker.");
+           // Idéalement, gérer ce cas (peut-être afficher une erreur et ne pas naviguer ?)
+           // Pour l'instant, on continue, mais la récupération user échouera probablement.
       }
+
+      // Étape 2: Récupérer les données utilisateur complètes depuis le serveur
+      try {
+        // L'instance axios devrait être configurée pour envoyer le token automatiquement
+        const me = await axios.get(API_ROUTES.auth.user_data);
+        if (me.data.success && me.data.user) {
+          setUser(me.data.user);
+          console.log('UserContext mis à jour:', me.data.user);
+        } else {
+          console.error('Échec de la récupération des données utilisateur ou utilisateur manquant:', me.data);
+          // Envisager d'afficher une erreur à l'utilisateur ici
+          // setError("Impossible de charger vos informations utilisateur.");
+        }
+      } catch (e) {
+        console.error('Erreur lors de la récupération user_data:', e);
+        // Envisager d'afficher une erreur à l'utilisateur ici
+        setError("Une erreur réseau est survenue lors du chargement de vos informations.");
+        // On pourrait choisir de ne pas naviguer en cas d'échec critique ici
+        // return; 
+      }
+
+      // Étape 3: Fermer la modale et naviguer vers la page de prise de RDV
       closeModal();
       setOpenModalState(false);
-      navigate('/dashboard/appointment/tel');
-    } catch (error) {
-      console.error("Erreur de redirection:", error);
-      setError("Une erreur est survenue lors de la redirection");
+      navigate('/dashboard/appointment/tel', { replace: true });
+
+    } catch (error) { // Attrape les erreurs de stockage de token ou autres erreurs inattendues
+      console.error("Erreur dans handleModalAction:", error);
+      setError("Une erreur est survenue lors de la finalisation de l'inscription."); // Informer l'utilisateur
+      // S'assurer que la modale est fermée même en cas d'erreur
       closeModal();
       setOpenModalState(false);
     }
@@ -731,9 +758,24 @@ function Home() {
             <TextField 
               fullWidth 
               label="Nom" 
-              {...register("nom", { required: true })}
+              {...register("nom", { 
+                required: "Le nom est requis",
+                pattern: {
+                  value: /^\S+$/, // Regex: Doit ne contenir que des caractères non-espaces
+                  message: "Le nom ne doit pas contenir d'espace" 
+                }
+              })}
+              onChange={(e) => {
+                // Nettoyage en temps réel : supprime tous les espaces
+                const value = e.target.value.replace(/\s+/g, "");
+                // Met à jour la valeur dans react-hook-form et valide
+                setValue("nom", value, { shouldValidate: true }); 
+              }}
+              inputProps={{ 
+                pattern: "\\S+" // Attribut HTML5 pour validation navigateur (double échappement nécessaire)
+              }}
               error={!!errors.nom}
-              helperText={errors.nom ? "Ce champ est requis" : ""}
+              helperText={errors.nom ? errors.nom.message : ""}
               sx={{ mb: 2 }} 
             />
             <TextField 
@@ -843,18 +885,85 @@ function Home() {
           backgroundColor: '#2E5735',
           color: 'white',
           textAlign: 'center',
-          py: 2
+          py: 2,
+          position: 'sticky',
+          top: 0,
+          zIndex: 1
         }}>
           🧮 Simulation
         </DialogTitle>
-        <DialogContent sx={{ mt: 2, p: 4 }}>
+
+        {isMobile && (
+           <Box sx={{ 
+               p: 2, 
+               bgcolor: 'background.paper',
+               borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+               position: 'sticky',
+               top: '64px',
+               zIndex: 1,
+               display: 'flex', 
+               flexDirection: 'column',
+               alignItems: 'center', 
+               gap: 1
+           }}>
+               <Typography variant="body2" sx={{ textAlign: 'center', mb: 1, fontWeight: 'medium' }}>
+                  Simulation personnalisée ? <br/> Inscrivez-vous ou réservez un appel gratuit.
+               </Typography>
+               <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, width: '100%'}}>
+                   <Button
+                     variant="contained"
+                     onClick={switchToFormModal}
+                     size="small"
+                     sx={{
+                       flexGrow: 1,
+                       backgroundColor: '#D32F2F',
+                       '&:hover': {
+                         backgroundColor: '#B71C1C',
+                       },
+                       py: 0.8,
+                       px: 1.5,
+                       fontSize: '0.8rem',
+                       textTransform: 'none'
+                     }}
+                   >
+                     Appel Gratuit
+                   </Button>
+                   <Button
+                     onClick={handleCloseSimModal}
+                     variant="outlined"
+                     size="small"
+                     sx={{
+                       flexGrow: 1,
+                       color: '#2E5735',
+                       borderColor: '#2E5735',
+                       '&:hover': {
+                         borderColor: '#303f9f',
+                         backgroundColor: 'rgba(63, 81, 181, 0.05)'
+                       },
+                       py: 0.8,
+                       px: 1.5,
+                       fontSize: '0.8rem',
+                     }}
+                   >
+                     Fermer
+                   </Button>
+               </Box>
+           </Box>
+         )}
+
+        <DialogContent sx={{ 
+            mt: 0,
+            p: { xs: 2, sm: 4 }
+        }}>
           {showConfetti && <Confetti width={width} height={height} style={{ position: 'fixed', top: 0, left: 0, zIndex: 9999 }} />}
           
           {/* Tabs de sélection */}
           <Tabs 
             value={selectedSim}
             onChange={(_, newValue) => setSelectedSim(newValue)}
-            centered
+            variant="scrollable"
+            scrollButtons="auto"
+            allowScrollButtonsMobile
             sx={{
               mb: 4,
               '& .MuiTab-root': {
@@ -862,6 +971,8 @@ function Home() {
                 fontWeight: 500,
                 fontSize: '1.1rem',
                 textTransform: 'none',
+                minWidth: 'auto',
+                flexShrink: 0,
                 '&.Mui-selected': {
                   color: '#2E5735',
                   fontWeight: 700
@@ -869,7 +980,8 @@ function Home() {
               },
               '& .MuiTabs-indicator': {
                 backgroundColor: '#2E5735'
-              }
+              },
+              overflowX: 'auto',
             }}
           >
             <Tab label="Kinésithérapeute" value="kine" />
@@ -936,7 +1048,7 @@ function Home() {
 
           {/* Bouton pour masquer/afficher les résultats */}
           {showResults && data && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4, mb: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, mb: 2 }}>
               <Button 
                 variant="contained"
                 onClick={() => setResultsExpanded(!resultsExpanded)}
@@ -970,7 +1082,7 @@ function Home() {
             <Collapse in={resultsExpanded}>
               <>
                 {/* Résultats BNC et ODIA */}
-                <Grid container spacing={3} sx={{ mt: 4 }}>
+                <Grid container spacing={3} sx={{ mt: 2 }}>
                   <Grid item xs={12} md={6}>
                     <Paper elevation={1} sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
                       <Box
@@ -1148,9 +1260,14 @@ function Home() {
           )}
         </DialogContent>
         <DialogActions sx={{
-            p: 3,
+            p: { xs: 1, sm: 3 },
             backgroundColor: 'background.paper',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            borderTop: '1px solid rgba(0, 0, 0, 0.12)',
+            position: 'sticky',
+            bottom: 0,
+            zIndex: 1,
+            display: { xs: 'none', sm: 'flex' }
           }}
         >
           <Typography
@@ -1160,7 +1277,7 @@ function Home() {
               alignSelf: 'center',
               mr: 2,
               fontWeight: 'bold',
-              fontSize: '1.1rem'
+              fontSize: '1.1rem',
             }}
           >
             Simulation personnalisée ? Inscrivez-vous à l'espace visiteur ou réservez un appel gratuit

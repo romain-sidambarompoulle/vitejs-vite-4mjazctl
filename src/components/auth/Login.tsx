@@ -15,7 +15,6 @@ function Login() {
     password: ''
   });
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const isMounted = useRef(true);
 
   useEffect(() => {
@@ -27,19 +26,13 @@ function Login() {
   }, []);
 
   useEffect(() => {
-    // Récupérer les identifiants depuis l'état de navigation
     if (location.state?.email && location.state?.password) {
-      // Pré-remplir les champs du formulaire
       setFormData({
         email: location.state.email,
         password: location.state.password
       });
-      
-      // Optionnel : nettoyer l'état après utilisation
-      navigate(location.pathname, { replace: true });
     }
     
-    // Alternative : récupérer depuis localStorage si l'état n'est pas disponible
     else {
       const tempCredentials = localStorage.getItem('tempCredentials');
       if (tempCredentials) {
@@ -48,13 +41,12 @@ function Login() {
           email: email,
           password: password
         });
-        localStorage.removeItem('tempCredentials'); // Nettoyage après utilisation
+        localStorage.removeItem('tempCredentials');
       }
     }
-  }, [location]);
+  }, [location.state]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Convertir automatiquement l'email en minuscules pour éviter les erreurs de casse
     if (e.target.name === 'email') {
       setFormData({ ...formData, [e.target.name]: e.target.value.toLowerCase() });
     } else {
@@ -64,7 +56,18 @@ function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    // === Overlay plein‑écran IMMÉDIAT pour masquer tout contenu ===
+    console.log("Ajout de l'overlay de masquage immédiat.");
+    const shield = document.createElement('div');
+    shield.id = 'login-shield'; // Donner un ID pour pouvoir le retirer
+    shield.style.cssText =
+      'position:fixed;inset:0;z-index:2147483647;background:#ffffff;' + // z-index très élevé
+      'display:flex;align-items:center;justify-content:center;' +
+      'font:600 1.1rem Inter,sans-serif;color:#2E5735'; // Police et couleur
+    shield.textContent = 'Connexion en cours…';
+    document.body.appendChild(shield);
+    // ==============================================================
+
     setError('');
 
     try {
@@ -75,29 +78,33 @@ function Login() {
       console.log("Réponse de connexion:", response.data);
 
       if (response.data.success && response.data.user) {
-        // Stockage complet des informations
         localStorage.setItem('user', JSON.stringify(response.data.user));
-        
-        // Log pour vérifier (ne contient pas le mot de passe)
         console.log("Utilisateur stocké:", response.data.user);
-        
-        // Mise à jour du contexte
         setUser(response.data.user);
+        localStorage.setItem('loginInProgress', 'true');
+        console.log("Flag 'loginInProgress' mis à true dans localStorage.");
+
+        const targetUrl = 
+          `${window.location.origin}/#/` +
+          (response.data.user.role === 'admin' ? 'admin' : 'dashboard/accueil');
         
-        // Navigation plus simple
-        if (response.data.user.role === 'admin') {
-          navigate('/admin');
-        } else {
-          navigate('/dashboard');
-        }
+        console.log("Remplacement de l'URL par:", targetUrl);
+        window.location.replace(targetUrl); 
+        console.log("Rechargement de la page en cours...");
+        window.location.reload(); 
+
       } else {
-        setError('Réponse du serveur incorrecte');
+        setError(response.data.message || 'Réponse du serveur incorrecte');
+        document.getElementById('login-shield')?.remove();
+        console.log("Overlay retiré (erreur serveur contrôlée).");
       }
     } catch (err: any) {
-      console.error("Erreur d'authentification");
-      setError(err.response?.data?.message || 'Erreur lors de la connexion');
-    } finally {
-      setLoading(false);
+      console.error("Erreur d'authentification", err);
+      if (isMounted.current) {
+        setError(err.response?.data?.message || err.message || 'Erreur lors de la connexion');
+        document.getElementById('login-shield')?.remove();
+        console.log("Overlay retiré (erreur catchée).");
+      }
     }
   };
 
@@ -108,11 +115,11 @@ function Login() {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: 'calc(100vh - 64px)', // ou la hauteur de ta barre de navigation
+        minHeight: 'calc(100vh - 64px)',
         width: '90%',
         maxWidth: '400px',
         mx: 'auto',
-        p: 2
+        p: 2,
       }}
     >
       <Typography variant="h4" gutterBottom>
@@ -148,7 +155,7 @@ function Login() {
             component="button"
             variant="body2"
             onClick={() => navigate('/forgot-password')}
-            sx={{ cursor: 'pointer' }}
+            sx={{ cursor: 'pointer' }} 
           >
             Mot de passe oublié ?
           </Link>
@@ -158,17 +165,17 @@ function Login() {
           type="submit"
           variant="contained"
           fullWidth
-          disabled={loading}
           sx={{
             backgroundColor: '#2E5735',
-            '&:hover': { backgroundColor: '#303f9f' }
+            '&:hover': { backgroundColor: '#1c3a21' }, 
+            transition: 'background-color 0.3s', 
+            py: 1.5 
           }}
         >
-          {loading ? 'Connexion...' : 'Se connecter'}
+          Se connecter 
         </Button>
       </form>
       
-      {/* Bouton de retour */}
       <Box sx={{ 
         display: 'flex', 
         justifyContent: 'center',
@@ -184,8 +191,8 @@ function Login() {
             borderColor: '#2E5735',
             backgroundColor: 'transparent',
             '&:hover': {
-              backgroundColor: 'rgba(63, 81, 181, 0.1)',
-              borderColor: '#2E5735',
+              backgroundColor: 'rgba(46, 87, 53, 0.1)', 
+              borderColor: '#1c3a21', 
             },
             py: 1,
             px: 3,
@@ -193,7 +200,8 @@ function Login() {
             fontSize: '1rem',
             borderWidth: '2px',
             borderRadius: '4px',
-            fontWeight: 500
+            fontWeight: 500,
+            transition: 'background-color 0.3s, border-color 0.3s' 
           }}
         >
           Retour à l'accueil

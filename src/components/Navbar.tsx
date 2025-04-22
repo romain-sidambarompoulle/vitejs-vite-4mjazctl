@@ -96,6 +96,7 @@ const Navbar = ({ user: propUser }: NavbarProps) => {
   const [signUpLoading, setSignUpLoading] = useState(false);
   const [signUpError, setSignUpError] = useState<string | null>(null);
   const [signUpSuccess, setSignUpSuccess] = useState(false);
+  const [logoutLoading, setLogoutLoading] = useState(false);
   const { register: registerSignUp, handleSubmit: handleSubmitSignUp, formState: { errors: errorsSignUp }, reset: resetSignUpForm, setValue } = useForm<ISignUpFormInput>({
     defaultValues: {
       consentementRGPDNav: false
@@ -133,24 +134,37 @@ const Navbar = ({ user: propUser }: NavbarProps) => {
 
   const handleLogout = async () => {
     handleUserMenuClose();
+    setLogoutLoading(true);
+    console.log("Début déconnexion, ajout overlay.");
+    const shield = document.createElement('div');
+    shield.id = 'logout-shield';
+    shield.style.cssText =
+      'position:fixed;inset:0;z-index:2147483647;background:#ffffff;' +
+      'display:flex;align-items:center;justify-content:center;' +
+      'font:600 1.1rem Inter,sans-serif;color:#2E5735';
+    shield.textContent = 'Déconnexion…';
+    document.body.appendChild(shield);
+
+    const token = await fetchCsrfToken();
+
     try {
-      const token = await fetchCsrfToken();
-      
-      await axios.post(API_ROUTES.auth.logout, { timestamp: Date.now() });
-      
-      localStorage.removeItem('user');
-      
-      if (window.location.hash !== '#/login') {
-          window.location.href = window.location.origin + '/#/login';
-      } else {
-          window.location.reload();
-      }
+      console.log("Tentative d'appel API /logout");
+      await axios.post(
+        API_ROUTES.auth.logout,
+        { timestamp: Date.now() },
+        { headers: { 'csrf-token': token } }
+      );
+      console.log("API /logout appelée avec succès (ou sans erreur bloquante).");
     } catch (error: unknown) {
-      if (error && typeof error === 'object' && 'response' in error) {
-        const axiosError = error as { response: { status: number; data: any; headers: any } };
-        console.error("Erreur logout:", axiosError.response);
-      }
-      alert('Erreur lors de la déconnexion. Veuillez réessayer.');
+      console.warn('Logout API en erreur (ignorée pour la redirection) :', error);
+    } finally {
+      console.log("Bloc finally de logout : nettoyage et redirection.");
+      localStorage.removeItem('user');
+      document.getElementById('logout-shield')?.remove();
+      
+      const loginUrl = `${window.location.origin}/#/login`;
+      console.log("Redirection vers:", loginUrl);
+      window.location.replace(loginUrl);
     }
   };
 
@@ -394,7 +408,21 @@ const Navbar = ({ user: propUser }: NavbarProps) => {
                         >
                           {getInitials(currentUser.nom, currentUser.prenom)}
                         </Avatar>
-                        <Button color="inherit" onClick={handleLogout} sx={{ color: isDashboard ? '#2E5735' : 'black', border: isDashboard ? '1px solid #2E5735' : 'none', '&:hover': { backgroundColor: isDashboard ? 'rgba(63, 81, 181, 0.1)' : undefined } }}>
+                        <Button 
+                          color="inherit" 
+                          onClick={handleLogout} 
+                          disabled={logoutLoading}
+                          startIcon={logoutLoading ? <CircularProgress size={18} sx={{ color: isDashboard ? '#2E5735' : 'black' }} /> : undefined}
+                          sx={{ 
+                            color: isDashboard ? '#2E5735' : 'black', 
+                            border: isDashboard ? '1px solid #2E5735' : 'none', 
+                            '&:hover': { 
+                              backgroundColor: isDashboard ? 'rgba(46, 87, 53, 0.1)' : undefined
+                            },
+                            pl: logoutLoading ? 1.5 : 2, 
+                            pr: 2
+                          }}
+                        >
                           Déconnexion
                         </Button>
                       </Box>
@@ -428,7 +456,10 @@ const Navbar = ({ user: propUser }: NavbarProps) => {
                   {currentUser ? (
                     <Fragment>
                       <MenuItem onClick={() => handleAuthNavigation('/dashboard/profile')}>Mon Profil</MenuItem>
-                      <MenuItem onClick={handleLogout}>Déconnexion</MenuItem>
+                      <MenuItem onClick={handleLogout} disabled={logoutLoading}>
+                         {logoutLoading && <CircularProgress size={16} sx={{ mr: 1 }} />} 
+                         Déconnexion
+                      </MenuItem>
                     </Fragment>
                   ) : (
                     <Fragment>
@@ -544,7 +575,20 @@ const Navbar = ({ user: propUser }: NavbarProps) => {
               <TextField
                 fullWidth
                 label="Nom complet"
-                {...registerSignUp("nom", { required: "Le nom est requis" })}
+                {...registerSignUp("nom", { 
+                  required: "Le nom est requis",
+                  pattern: {
+                    value: /^\S+$/,
+                    message: "Le nom ne doit pas contenir d'espace" 
+                  }
+                })}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\s+/g, "");
+                  setValue("nom", value, { shouldValidate: true });
+                }}
+                inputProps={{ 
+                  pattern: "\\S+"
+                }}
                 error={!!errorsSignUp.nom}
                 helperText={errorsSignUp.nom?.message}
                 sx={{ mb: 2 }}

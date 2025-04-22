@@ -42,18 +42,33 @@ const VisioUserPage = () => {
   }, [fetchVisioLink]);
 
   return (
-    <Box sx={{ py: 4, px: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+    <Box sx={{ py: { xs: 2, sm: 4 }, px: { xs: 1, sm: 2 } }}>
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: { xs: 'flex-start', sm: 'center' },
+        mb: { xs: 3, sm: 2 },
+        flexDirection: { xs: 'column', sm: 'row' },
+        gap: { xs: 1, sm: 0 }
+      }}>
         <Typography variant="h4" sx={{ color: '#2E5735', fontWeight: 600 }}>
           Visioconférence
         </Typography>
-        <Button variant="outlined" onClick={fetchVisioLink} startIcon={<RefreshIcon />} disabled={loading}>
+        <Button
+          variant="outlined"
+          onClick={fetchVisioLink}
+          startIcon={<RefreshIcon />}
+          disabled={loading}
+          sx={{
+            mt: { xs: 1, sm: 0 },
+            width: { xs: '100%', sm: 'auto' }
+          }}
+        >
           Actualiser
         </Button>
       </Box>
 
-      {/* ✨ Nouveau Paper pour les conseils ✨ */}
-      <Paper sx={{ p: 2, mb: 3, borderRadius: 2, backgroundColor: 'grey.100' }}>
+      <Paper sx={{ p: { xs: 2, sm: 3 }, mb: { xs: 2, sm: 3 }, borderRadius: 2, backgroundColor: 'grey.100' }}>
         <Typography variant="h6" sx={{ mb: 1, fontWeight: 'bold' }}>
           💡 Conseil d'utilisation
         </Typography>
@@ -68,12 +83,7 @@ const VisioUserPage = () => {
         </Typography>
       </Paper>
 
-      <Paper sx={{ p: 3, borderRadius: 2, textAlign: 'center' }}>
-        {/* Texte explicatif initial (peut être conservé ou supprimé selon votre préférence) */}
-        {/* <Typography variant="body2" color="text.secondary" sx={{ mb: 3, fontStyle: 'italic' }}>
-          Si votre conseiller vient d'activer un lien de visioconférence pour vous et qu'il n'apparaît pas, cliquez sur "Actualiser".
-        </Typography> */}
-
+      <Paper sx={{ p: { xs: 2, sm: 3 }, borderRadius: 2, textAlign: 'center' }}>
         {loading && <CircularProgress sx={{ my: 3 }} />}
 
         {!loading && error && (
@@ -97,9 +107,12 @@ const VisioUserPage = () => {
                       window.open(visioUrl, '_blank', 'noopener,noreferrer');
                     }
                   }}
-                  sx={{ 
+                  fullWidth
+                  sx={{
                     bgcolor: '#2E5735',
-                    '&:hover': { bgcolor: '#1E4625' }
+                    '&:hover': { bgcolor: '#1E4625' },
+                    maxWidth: { xs: '100%', sm: 'auto' },
+                    mt: { xs: 2, sm: 0 }
                   }}
                 >
                   Rejoindre ma visio
@@ -114,17 +127,17 @@ const VisioUserPage = () => {
         )}
       </Paper>
 
-      {/* ✨ Bouton de retour copié depuis Profile.tsx ✨ */}
       <Box sx={{
         display: 'flex',
         justifyContent: 'center',
-        mt: { xs: 2, sm: 3 },
+        mt: { xs: 3, sm: 4 },
         mb: { xs: 4, sm: 6 }
       }}>
         <Button
           variant="outlined"
           startIcon={<ArrowBackIcon />}
-          onClick={() => navigate('/dashboard')} // ✨ Assurer la bonne navigation
+          onClick={() => navigate('/dashboard')}
+          fullWidth
           sx={{
             color: '#2E5735',
             borderColor: '#2E5735',
@@ -139,7 +152,8 @@ const VisioUserPage = () => {
             fontSize: '1rem',
             borderWidth: '2px',
             borderRadius: '4px',
-            fontWeight: 500
+            fontWeight: 500,
+            maxWidth: { xs: '100%', sm: 'auto' }
           }}
         >
           Retour au tableau de bord

@@ -69,7 +69,7 @@ const FeaturesSection = () => {
             <Paper elevation={3} sx={{ p: 4, height: '100%', backgroundColor: '#f1e1c6' }}>
               <Box sx={{ p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}>
                 <Typography variant="body1" sx={{ fontStyle: 'italic', mb: 1 }}>
-                  "ODIA Stratégie m'a permise de consacrer plus de temps à mes patients tout en réduisant mes charges."
+                  "ODIA m'a permise de consacrer plus de temps à mes patients tout en réduisant mes charges."
                 </Typography>
                 <Typography variant="subtitle2" sx={{ textAlign: 'right', color: '#2E5735' }}>
                   Laura G. - Kinésithérapeute
@@ -93,7 +93,7 @@ const FeaturesSection = () => {
                   "Grâce à leur accompagnement, j'ai pu économiser plus de 15 000€ sur ma première année."
                 </Typography>
                 <Typography variant="subtitle2" sx={{ textAlign: 'right', color: '#2E5735' }}>
-                  Thomas M. - Infirmier libéral
+                  Thomas M. - Kinésithérapeute
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', mt: 1 }}>
                   <Typography variant="body2" sx={{ mr: 1 }}>Satisfaction :</Typography>

@@ -1,5 +1,5 @@
 import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { CssBaseline, Box } from "@mui/material";
+import { CssBaseline, Box, CircularProgress } from "@mui/material";
 import Home from "./pages/Home";
 import ReglesDeCalcul from "./pages/ReglesDeCalcul";
 import Navbar from "./components/Navbar";
@@ -72,7 +72,6 @@ import AccueilHome from './pages/dashboard/AccueilHome.tsx';
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  // ✨ Ajouter l'état pour le compteur de messages non lus
   const [unreadCount, setUnreadCount] = useState<number>(0);
 
   // ✨ Fonction pour charger le compteur initial de messages non lus
@@ -102,12 +101,12 @@ function App() {
   };
 
   useEffect(() => {
+    console.log("App useEffect: Démarrage");
+    let isMounted = true;
+
     // Débogage
     console.log("Cookies :", document.cookie);
     console.log("User en localStorage :", localStorage.getItem('user'));
-
-    let isMounted = true;
-    setIsLoading(true);
 
     const storedUser = localStorage.getItem('user');
     let initialUserSet = false;
@@ -150,27 +149,32 @@ function App() {
 
     const validateSession = async () => {
       try {
+        console.log("App useEffect: Début validateSession");
         const response = await axios.get(API_ROUTES.auth.user_data);
         console.log("Réponse de vérification auth:", response.data);
         if (response.data.success && response.data.user) {
           if (isMounted) {
+            console.log("App useEffect: Validation réussie, màj user");
             updateUser(response.data.user);
-            await fetchInitialUnreadCount(response.data.user); // ✨ Charger compteur après validation réussie
+            await fetchInitialUnreadCount(response.data.user);
           }
         } else {
-          console.log("Validation initiale échouée (success: false). Tentative de refresh...");
+          console.log("App useEffect: Validation échouée (success: false), tentative refresh...");
           await attemptRefreshAndRetry();
         }
       } catch (error: any) {
-        console.error("Erreur d'authentification initiale:", error);
+        console.error("App useEffect: Erreur validation initiale", error);
         if (error.response && error.response.status === 401) {
-          console.log("Validation initiale échouée (401). Tentative de refresh...");
+          console.log("App useEffect: Validation échouée (401), tentative refresh...");
           await attemptRefreshAndRetry();
         } else {
-          console.warn("L'appel de vérification initial a échoué (autre que 401).");
+          if(isMounted) {
+              updateUser(null);
+          }
+          console.warn("App useEffect: Appel vérification initial a échoué (autre que 401).");
         }
       } finally {
-         console.log("Fin de validateSession (finally). Mise de isLoading à false.");
+         console.log("App useEffect: Fin validateSession (finally).");
          if (isMounted) {
              setIsLoading(false);
          }
@@ -178,20 +182,20 @@ function App() {
     };
 
     if (initialUserSet) {
-      console.log("Utilisateur trouvé dans localStorage, validation de la session...");
-      validateSession();
+        console.log("App useEffect: Utilisateur trouvé dans localStorage, validation session...");
+        validateSession();
     } else {
-      console.log("Aucun utilisateur trouvé dans localStorage. Pas de validation de session.");
-      if (isMounted) {
-        setUser(null);
-        setIsLoading(false);
-      }
+        console.log("App useEffect: Pas d'utilisateur localStorage. Pas de validation. Fin chargement initial.");
+        if (isMounted) {
+            updateUser(null);
+            setIsLoading(false);
+        }
     }
 
-    // Récupérer le token CSRF
     fetchCsrfToken();
 
     return () => {
+      console.log("App useEffect: Cleanup");
       isMounted = false;
     };
 
@@ -202,25 +206,30 @@ function App() {
     if (newUser) {
       localStorage.setItem('user', JSON.stringify(newUser));
       console.log("Utilisateur mis à jour dans le contexte et localStorage:", newUser);
-      // ✨ Recharger le compteur si l'utilisateur change (ex: login/logout)
       fetchInitialUnreadCount(newUser); 
     } else {
       localStorage.removeItem('user');
       console.log("Utilisateur supprimé du contexte et localStorage.");
-      setUnreadCount(0); // ✨ Reset le compteur si logout
+      setUnreadCount(0);
     }
   };
 
   if (isLoading) {
-     return <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}><p>Chargement...</p></Box>;
+     console.log(`Affichage du loader initial: isLoading=${isLoading}`);
+     return (
+       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+         <CircularProgress /> 
+       </Box>
+     );
   }
 
-  // ✨ Préparer la valeur du contexte
+  console.log(`Rendu normal de l'application: isLoading=${isLoading}`);
+
   const contextValue: IUserContext = {
     user,
     setUser: updateUser,
     unreadCount,
-    setUnreadCount // Passer la fonction pour la mettre à jour
+    setUnreadCount
   };
 
   return (
@@ -254,8 +263,8 @@ function App() {
                 {/* Routes du dashboard avec Outlet */}
                 <Route path="/dashboard/*" element={user && user.role !== 'admin' ? <DashboardVisitor /> : <Navigate to="/login" replace />}>
                   <Route path="accueil" element={<AccueilHome />} />
-                  <Route path="" element={<DashboardHome />} /> {/* Fallback pour /dashboard */}
-                  <Route index element={<DashboardHome />} /> {/* Route par défaut */}
+                  <Route path="" element={<DashboardHome />} />
+                  <Route index element={<DashboardHome />} />
                   <Route path="profile" element={<Profile />} />
                   <Route path="documents" element={<Documents />} />
                   <Route path="form" element={<UserForm />} />
