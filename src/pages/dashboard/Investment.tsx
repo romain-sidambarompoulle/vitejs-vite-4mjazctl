@@ -25,7 +25,7 @@ const InvestmentPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <Container sx={{ py: { xs: 2, md: 3 }, px: { xs: 2, sm: 3 } }}>
+    <Container maxWidth="lg" sx={{ py: { xs: 2, md: 3 }, px: { xs: 2, sm: 3 }, maxWidth: '100vw', overflowX: 'hidden' }}>
       <Typography variant="h4" sx={{ mb: { xs: 3, md: 4 }, color: '#2E5735', fontWeight: 600, fontSize: { xs: '1.8rem', md: '2.2rem' } }}>
         Stratégies d'Investissement
       </Typography>
@@ -129,12 +129,16 @@ const InvestmentPage: React.FC = () => {
         <TableContainer sx={{ overflowX: 'auto' }}>
           <Table aria-label="tableau comparatif des stratégies d'investissement" size={isMobile ? "small" : "medium"}>
             <TableHead>
-              <TableRow sx={{ backgroundColor: 'rgba(46, 87, 53, 0.1)', whiteSpace: 'nowrap' }}>
-                <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', md: '1rem' }, padding: { xs: 1, md: 2 } }}>Stratégie</TableCell>
-                <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', md: '1rem' }, padding: { xs: 1, md: 2 } }}>Rendement Brut (estim.)</TableCell>
-                <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', md: '1rem' }, padding: { xs: 1, md: 2 } }}>Rendement Net (estim.)</TableCell>
-                <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', md: '1rem' }, padding: { xs: 1, md: 2 } }}>Avantages Clés</TableCell>
-                <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', md: '1rem' }, padding: { xs: 1, md: 2 } }}>Risques / Contraintes</TableCell>
+              <TableRow sx={{
+                backgroundColor: 'rgba(46, 87, 53, 0.1)',
+                whiteSpace: { xs: 'normal', md: 'nowrap' },
+                wordBreak: 'break-word'
+              }}>
+                <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', md: '1rem' }, padding: { xs: 1, md: 2 }, whiteSpace: { xs: 'normal', md: 'nowrap' } }}>Stratégie</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', md: '1rem' }, padding: { xs: 1, md: 2 }, whiteSpace: { xs: 'normal', md: 'nowrap' } }}>Rendement Brut (estim.)</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', md: '1rem' }, padding: { xs: 1, md: 2 }, whiteSpace: { xs: 'normal', md: 'nowrap' } }}>Rendement Net (estim.)</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', md: '1rem' }, padding: { xs: 1, md: 2 }, whiteSpace: { xs: 'normal', md: 'nowrap' } }}>Avantages Clés</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', md: '1rem' }, padding: { xs: 1, md: 2 }, whiteSpace: { xs: 'normal', md: 'nowrap' } }}>Risques / Contraintes</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

@@ -113,13 +113,21 @@ const ComptaFictive: React.FC = () => {
           opacity: 0.15,
           color: '#3F51B5',
           pointerEvents: 'none',
-          zIndex: 999
+          zIndex: 999,
+          overflow: 'hidden',
+          maxWidth: '100%'
         }}
       >
-        <LockIcon sx={{ fontSize: 600 }} />
+        <LockIcon sx={{ fontSize: { xs: 260, sm: 400, md: 600 } }} />
       </Box>
 
-      <Container sx={{ position: 'relative', zIndex: 1, mt: 4 }}>
+      <Container sx={{
+        position: 'relative',
+        zIndex: 1,
+        mt: 4,
+        maxWidth: '100vw',
+        overflowX: 'hidden'
+      }}>
         <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 2, color: '#2E5735' }}>
           Espace Comptabilité
         </Typography>
@@ -159,7 +167,7 @@ const ComptaFictive: React.FC = () => {
                           }}
                         >
                           {item.icon}
-                          <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', wordBreak: 'break-word' }}>
                             {item.title}
                           </Typography>
                         </Box>

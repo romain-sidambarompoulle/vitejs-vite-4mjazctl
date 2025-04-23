@@ -101,7 +101,7 @@ const EducationView = () => {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg" sx={{ py: 4, maxWidth: '100vw', overflowX: 'hidden' }}>
       <Typography variant="h3" component="h1" gutterBottom sx={{ mb: 4, fontWeight: 'bold', color: '#2E5735' }}>
         Espace éducatif
       </Typography>
@@ -140,7 +140,7 @@ const EducationView = () => {
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                    <Typography variant="h6" component="h2" sx={{ flex: 1 }}>
+                    <Typography variant="h6" component="h2" sx={{ flex: 1, wordBreak: 'break-word' }}>
                       {section.titre}
                     </Typography>
                     {section.contents && (
@@ -175,7 +175,7 @@ const EducationView = () => {
                             <CardHeader 
                               title={content.titre}
                               subheader={content.description}
-                              titleTypographyProps={{ variant: 'h6' }}
+                              titleTypographyProps={{ variant: 'h6', sx: { wordBreak: 'break-word' } }}
                               subheaderTypographyProps={{ variant: 'body2' }}
                               sx={{ 
                                 backgroundColor: 'rgba(0, 0, 0, 0.02)',
@@ -196,8 +196,16 @@ const EducationView = () => {
                                 className="content-html"
                                 sx={{ 
                                   '& img': { maxWidth: '100%', height: 'auto' },
-                                  '& table': { borderCollapse: 'collapse', width: '100%' },
-                                  '& th, & td': { border: '1px solid #ddd', padding: '8px' },
+                                  '& table': { 
+                                    borderCollapse: 'collapse', 
+                                    width: '100%', 
+                                    tableLayout: 'fixed'
+                                  },
+                                  '& th, & td': { 
+                                    border: '1px solid #ddd', 
+                                    padding: '8px', 
+                                    wordBreak: 'break-word'
+                                  },
                                   '& ul, & ol': { paddingLeft: '20px' }
                                 }}
                                 dangerouslySetInnerHTML={{ 
