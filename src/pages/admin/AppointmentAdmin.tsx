@@ -1077,13 +1077,10 @@ const AppointmentAdmin = () => {
               selectable={true}
               select={handleDateSelect}
               timeZone="local"
-              businessHours={{
-                daysOfWeek: [1, 2, 3, 4, 5], // Lundi au vendredi
-                startTime: '08:00',
-                endTime: '18:00',
-              }}
-              slotMinTime="07:00:00"
-              slotMaxTime="21:00:00"
+              businessHours={false}
+              weekends={true}
+              slotMinTime="00:00:00"
+              slotMaxTime="24:00:00"
               allDaySlot={false}
               height="650px"
               forceEventDuration={true}

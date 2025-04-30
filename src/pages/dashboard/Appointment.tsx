@@ -407,11 +407,10 @@ const Appointment = () => {
       eventClick: handleEventClick,
       locale: "fr",
       timeZone: "local",
-      businessHours: {
-        daysOfWeek: [1, 2, 3, 4, 5],
-        startTime: '09:00',
-        endTime: '18:00',
-      },
+      businessHours: false, // Désactiver les heures ouvrées
+      weekends: true, // Afficher le week-end
+      slotMinTime: '00:00:00', // Début à minuit
+      slotMaxTime: '24:00:00', // Fin à minuit le lendemain
       allDaySlot: false,
       forceEventDuration: true,
       eventTimeFormat: {
@@ -436,8 +435,6 @@ const Appointment = () => {
         height: 'auto',
         slotDuration: '01:00:00',
         slotLabelInterval: '01:00',
-        slotMinTime: '08:00:00',
-        slotMaxTime: '20:00:00'
       };
     } else if (isTablet) {
       return {
@@ -450,8 +447,6 @@ const Appointment = () => {
         height: 550,
         slotDuration: '00:30:00',
         slotLabelInterval: '01:00',
-        slotMinTime: '08:00:00',
-        slotMaxTime: '20:00:00',
         views: {
           timeGridThreeDay: {
             type: 'timeGrid',
@@ -470,8 +465,6 @@ const Appointment = () => {
         height: 650,
         slotDuration: '00:30:00',
         slotLabelInterval: '01:00',
-        slotMinTime: '07:00:00',
-        slotMaxTime: '21:00:00',
         snapDuration: '00:30:00'
       };
     }
