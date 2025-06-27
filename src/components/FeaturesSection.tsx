@@ -43,7 +43,7 @@ const FeaturesSection = () => {
                 <AssignmentIcon sx={{ width: 48, height: 48, color: '#2E5735' }} />
               </Box>
               <Typography variant="h6" sx={{ mb: 1, fontWeight: 600, color: '#2E5735', textAlign: 'center' }}>
-                Zéro Paprasse 
+                Zéro Paperasse 
               </Typography>
             </Paper>
           </Grid>

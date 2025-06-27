@@ -10,7 +10,8 @@ import {
   Chat as ChatIcon,
   Lock as LockIcon,
   Videocam as VideocamIcon,
-  MarkChatUnread as InternalMessagesIcon
+  MarkChatUnread as InternalMessagesIcon,
+  School as SchoolIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../config/axios';
@@ -151,6 +152,14 @@ const AdminHome = () => {
       description: 'Lancer une visio avec un utilisateur',
       count: null,
       path: '/admin/visio',
+      badgeContent: 0
+    },
+    {
+      title: 'Inscriptions Étudiants',
+      icon: <SchoolIcon sx={{ fontSize: 40, color: '#3F51B5' }} />,
+      description: 'Voir les inscrits à la web-conférence',
+      count: null,
+      path: '/admin/student-leads',
       badgeContent: 0
     },
   ];

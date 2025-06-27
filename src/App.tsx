@@ -69,6 +69,12 @@ import ConversationAdmin from './pages/admin/ConversationAdmin';
 // ✨ Importer le nouveau composant AccueilHome
 import AccueilHome from './pages/dashboard/AccueilHome.tsx';
 
+// ✨ Importer la nouvelle page StudentKineLanding
+import StudentKineLanding from './pages/StudentKineLanding';
+
+// ✨ Importer la nouvelle page : liste des leads étudiants
+import StudentLeadsList from './pages/admin/StudentLeadsList';
+
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -251,6 +257,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/regles-de-calcul" element={<ReglesDeCalcul />} />
+                <Route path="/student-kine" element={<StudentKineLanding />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -298,6 +305,7 @@ function App() {
                   <Route path="visio" element={<Visio />} />
                   <Route path="messages-users" element={<MessagesUsersList />} /> 
                   <Route path="messages/:userId" element={<ConversationAdmin />} />
+                  <Route path="student-leads" element={<StudentLeadsList />} />
                   <Route path="chat-messages" element={<MessagesAdmin />} /> 
                 </Route>
 

@@ -113,7 +113,13 @@ export const API_ROUTES = {
   // ✨ Nouvelle route pour le chat widget
   chat: {
     messages: `${BASE_URL}/api/chat/messages`,
-  }
+  },
+
+  // ✨ Nouveau endpoint admin : liste des inscrits « student_leads »
+  adminStudentLeads: `${BASE_URL}/api/student-leads`,
+
+  // ✨ Nouveau endpoint pour le formulaire étudiant
+  studentLeads: `${BASE_URL}/api/student-leads`,
 };
 
 // Exporter la base URL pour d'autres usages
