@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {
   Box,
   Container,
@@ -9,7 +10,9 @@ import {
   TableHead,
   TableRow,
   Typography,
-  CircularProgress
+  CircularProgress,
+  IconButton,
+  Tooltip
 } from '@mui/material';
 import axios from '../../config/axios';
 import { API_ROUTES } from '../../config/api';
@@ -46,6 +49,19 @@ const StudentLeadsList = () => {
     fetchLeads();
   }, []);
 
+  /** Supprime localement + en base */
+  const handleDelete = async (id: number) => {
+    const confirm = window.confirm('Confirmer la suppression de cet inscrit ?');
+    if (!confirm) return;
+    try {
+      await axios.delete(API_ROUTES.adminDeleteStudentLead(id));
+      setLeads((prev) => prev.filter((l) => l.id !== id));
+    } catch (err) {
+      console.error('Erreur suppression lead:', err);
+      alert('Erreur lors de la suppression.');
+    }
+  };
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Typography variant="h4" fontWeight={700} mb={4} color="#3F51B5">
@@ -67,6 +83,7 @@ const StudentLeadsList = () => {
                 <TableCell>Région</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Inscrit le</TableCell>
+                <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -79,6 +96,17 @@ const StudentLeadsList = () => {
                   <TableCell>{lead.email}</TableCell>
                   <TableCell>
                     {new Date(lead.created_at).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Tooltip title="Supprimer">
+                      <IconButton
+                        color="error"
+                        onClick={() => handleDelete(lead.id)}
+                        size="small"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               ))}

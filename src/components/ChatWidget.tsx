@@ -17,7 +17,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import ChatIcon from '@mui/icons-material/Chat';
 import CloseIcon from '@mui/icons-material/Close';
 import MessageIcon from '@mui/icons-material/Message';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from '../config/axios';
 import { API_ROUTES } from '../config/api';
 import { UserContext } from '../contexts/UserContext';
@@ -25,6 +25,8 @@ import { UserContext } from '../contexts/UserContext';
 const ChatWidget: React.FC = () => {
   const { user, unreadCount } = useContext(UserContext);
   const navigate = useNavigate();
+  const location = useLocation();
+  const isStudentPage = location.pathname.startsWith('/student-kine');
 
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState('');
@@ -111,7 +113,10 @@ const ChatWidget: React.FC = () => {
 
   return (
     <>
-      {!user && (
+      {/* 💬 Bulle « contact » publique  
+          – Affichée si personne n’est connecté  
+          – OU sur la page /student-kine pour tout le monde */}
+      {(!user || isStudentPage) && (
         <>
           {!isOpen && (
             <Fab
@@ -239,7 +244,8 @@ const ChatWidget: React.FC = () => {
         </>
       )}
 
-      {user && user.role !== 'admin' && (
+      {/* Bouton messages VISITEUR : uniquement hors /student-kine */}
+      {user && user.role !== 'admin' && !isStudentPage && (
          <Fab
             color="primary"
             aria-label="open internal messages"
@@ -252,7 +258,8 @@ const ChatWidget: React.FC = () => {
           </Fab>
       )}
 
-      {user && user.role === 'admin' && (
+      {/* Bouton messages ADMIN : uniquement hors /student-kine */}
+      {user && user.role === 'admin' && !isStudentPage && (
           <Fab
             aria-label="open admin messages list"
             onClick={() => navigate('/admin/messages-users')}

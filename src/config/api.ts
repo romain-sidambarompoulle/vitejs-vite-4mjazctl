@@ -118,6 +118,9 @@ export const API_ROUTES = {
   // ✨ Nouveau endpoint admin : liste des inscrits « student_leads »
   adminStudentLeads: `${BASE_URL}/api/student-leads`,
 
+  // ✨ Endpoint admin : supprimer un inscrit
+  adminDeleteStudentLead: (id: number | string) => `${BASE_URL}/api/student-leads/${id}`,
+
   // ✨ Nouveau endpoint pour le formulaire étudiant
   studentLeads: `${BASE_URL}/api/student-leads`,
 };
