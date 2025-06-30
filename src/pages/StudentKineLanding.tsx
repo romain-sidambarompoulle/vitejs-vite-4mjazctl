@@ -97,11 +97,24 @@ const StudentKineLanding: React.FC = () => {
               Le&nbsp;samedi&nbsp;5&nbsp;juillet&nbsp;2025&nbsp;à&nbsp;11&nbsp;h
             </Typography>
             <Typography
-              variant="h6"
-              sx={{ animation: 'slideFade 0.8s 0.45s ease-out forwards', opacity: 0 }}
+              variant="h5"
+              fontWeight={800}
+              sx={{
+                color: '#EFE9AE',
+                textShadow: '0 2px 6px rgba(0,0,0,0.4)',
+                letterSpacing: 1,
+                animation: 'slideFade 0.8s 0.4s ease-out forwards',
+                opacity: 0
+              }}
             >
-              Web&nbsp;conférence offerte&nbsp;: découvre la solution administrative ultra&nbsp;simplifiée
-              qui te fera économiser en moyenne&nbsp;20&nbsp;000&nbsp;€ par an&nbsp;!
+              WEB&nbsp;CONFÉRENCE&nbsp;OFFERTE
+            </Typography>
+            <Typography
+              variant="h6"
+              sx={{ animation: 'slideFade 0.8s 0.55s ease-out forwards', opacity: 0 }}
+            >
+              Découvre la solution administrative ultra&nbsp;simplifiée qui te fera économiser
+              en moyenne&nbsp;20&nbsp;000&nbsp;€ par an&nbsp;!
             </Typography>
             <Stack
               direction={{ xs: 'column', sm: 'row' }}
